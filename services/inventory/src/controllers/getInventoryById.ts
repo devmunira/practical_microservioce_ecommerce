@@ -1,4 +1,6 @@
 import prisma from "@/config/db";
+import { InventoryServices } from "@/services/inventory.services";
+import response from "@/utils/response";
 import { NextFunction, Request, Response } from "express";
 
 const getInventoryById = async (
@@ -8,7 +10,14 @@ const getInventoryById = async (
 ) => {
   try {
     const { inventoryId } = req.params;
-    return await prisma.inventory.findFirst({ where: { id: inventoryId } });
+    const data = await new InventoryServices().getInventoryDetailsById(
+      inventoryId
+    );
+    return res.status(200).json({
+      code: 200,
+      message: "Data Retrieve Successfully",
+      data,
+    });
   } catch (error) {
     console.log("Error throw while get inventory by Id:" + error);
     next(error);

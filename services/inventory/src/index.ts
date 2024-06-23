@@ -2,9 +2,12 @@ import express from "express";
 import dotenv from "dotenv";
 import morgan from "morgan";
 import cors from "cors";
-import { Response, Request, ErrorRequestHandler } from "express";
-import { createInventory } from "./controllers";
+import { Response, Request } from "express";
 import router from "./routes";
+import swaggerUi from "swagger-ui-express";
+import YAML from "yamljs";
+import { errorHandler, methodNotAllowed } from "./middlewares";
+const swaggerDocs = YAML.load("docs/swagger.yaml");
 
 dotenv.config();
 
@@ -13,22 +16,28 @@ app.use(express.json());
 app.use(cors());
 app.use(morgan("dev"));
 
-app.get("/health", (_req: Request, res: Response) => {
-  res.status(200).json({ message: "Server health is Okay!" });
-});
+app.get(
+  "/api/health",
+  methodNotAllowed("get"),
+  (_req: Request, res: Response) => {
+    res.status(200).json({ code: 200, message: "Server health is okey" });
+  }
+);
 
-app.use("/", router);
+app.use("/api", router);
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 // 404 handler
 app.use((_req, res) => {
-  res.status(404).json({ message: "Not found!" });
+  res.status(404).json({
+    code: 404,
+    error: "Not Found",
+    message: "Requested resource not found",
+  });
 });
 
 // Error handler
-app.use((err: any, _req: Request, res: Response) => {
-  console.log(err.stack);
-  res.status(500).json({ message: "Internal Server Error" });
-});
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 4002;
 const serviceName = process.env.SERVICE_NAME || "inventory-service";

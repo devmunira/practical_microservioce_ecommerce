@@ -9,7 +9,8 @@ export const inventoryCreateDTOSchema = z.object({
 
 export const updateInventoryDTOShcema = z.object({
   quantity: z.number().int(),
-  acyionType: z.nativeEnum(ActionType),
+  actionType: z.nativeEnum(ActionType),
 });
 
 export type InventoryCreateDTO = z.infer<typeof inventoryCreateDTOSchema>;
+export type InventoryUpdateDTO = z.infer<typeof updateInventoryDTOShcema>;

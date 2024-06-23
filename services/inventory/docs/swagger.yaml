@@ -1,0 +1,373 @@
+openapi: 3.0.0
+servers:
+  - description: Local Server
+    url: http://localhost:4002/api
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/FSWFOFFICIAL/Ecom-Inventory/1.0.0
+info:
+  version: "1.0.0"
+  title: Microservice Ecommerce Project
+  description: This api documentation is for inventory service.
+tags:
+  - name: Health
+    description: Check Service is running on server
+  - name: Inventory Deatils
+    description: Get Single Inventory Details with Corresponding Histories
+  - name: Create Inventory
+    description: Create new Inventory with history
+  - name: Update Inventory
+    description: Update Inventory with History
+  - name: Get Inventory
+    description: Get only inventory data without history
+paths:
+  "/health":
+    get:
+      tags:
+        - Health
+      responses:
+        200:
+          description: "Service is running"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                    default: 200
+                  message:
+                    type: string
+                    format: text
+                    example: "Server health is okey"
+        404:
+          $ref: "#/components/responses/404"
+        500:
+          $ref: "#/components/responses/500"
+        405:
+          $ref: "#/components/responses/405"
+  "/inventories/{inventoryId}/histories":
+    get:
+      tags:
+        - Inventory Deatils
+      parameters:
+        - $ref: "#/components/parameters/inventoryId"
+      responses:
+        200:
+          description: "Data Retrive Successfully"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                    default: 200
+                  message:
+                    type: string
+                    format: text
+                    example: "Data Retrive Successfully"
+                  data:
+                    allOf:
+                      - $ref: "#/components/schemas/inventoryWithHistory"
+        404:
+          $ref: "#/components/responses/404"
+        500:
+          $ref: "#/components/responses/500"
+        405:
+          $ref: "#/components/responses/405"
+  "/inventories":
+    post:
+      tags:
+        - Create Inventory
+      requestBody:
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "#/components/schemas/createInventory"
+              required:
+                - sku
+                - quantity
+                - productId
+      responses:
+        201:
+          description: Inventory Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                    example: 201
+                  message:
+                    type: string
+                    example: Inventory Created!
+                  data:
+                    $ref: "#/components/schemas/inventory"
+        400:
+          $ref: "#/components/responses/400"
+        500:
+          $ref: "#/components/responses/500"
+        405:
+          $ref: "#/components/responses/405"
+  "/inventories/{inventoryId}":
+    put:
+      tags:
+        - Update Inventory
+      parameters:
+        - $ref: "#/components/parameters/inventoryId"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "#/components/schemas/updateInventory"
+              required:
+                - actionType
+                - quantity
+      responses:
+        200:
+          description: Inventory Updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                    example: 200
+                  message:
+                    type: string
+                    example: Inventory Updated!
+                  data:
+                    $ref: "#/components/schemas/inventoryWithHistory"
+        400:
+          $ref: "#/components/responses/400"
+        500:
+          $ref: "#/components/responses/500"
+        405:
+          $ref: "#/components/responses/405"
+    get:
+      tags:
+        - Get Inventory
+      parameters:
+        - $ref: "#/components/parameters/inventoryId"
+      responses:
+        200:
+          description: "Data Retrive Successfully"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                    default: 200
+                  message:
+                    type: string
+                    format: text
+                    example: "Data Retrive Successfully"
+                  data:
+                    $ref: "#/components/schemas/inventoryWithHistory"
+        404:
+          $ref: "#/components/responses/404"
+        500:
+          $ref: "#/components/responses/500"
+        405:
+          $ref: "#/components/responses/405"
+
+components:
+  parameters:
+    inventoryId:
+      required: true
+      in: path
+      name: inventoryId
+      description: Hold unique key of any object
+      schema:
+        type: string
+        example: "64f825a8e1e529afedd53695"
+  schemas:
+    400:
+      type: array
+      items:
+        type: object
+        properties:
+          fields:
+            type: string
+            example: username
+          message:
+            type: string
+            example: username max length is 20 Letters
+          in:
+            type: string
+            example: body
+    createInventory:
+      type: object
+      properties:
+        productId:
+          type: string
+        sku:
+          type: string
+        quantity:
+          type: integer
+          format: int32
+          example: 10
+          default: 0
+    updateInventory:
+      type: object
+      properties:
+        actionType:
+          type: string
+          example: "IN"
+        quantity:
+          type: integer
+          format: int32
+          example: 10
+    inventory:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "64f825a8e1e529afedd53695"
+        productId:
+          type: string
+        sku:
+          type: string
+        quantity:
+          type: integer
+          format: int32
+          example: 10
+          default: 0
+        createdAt:
+          type: string
+          format: string
+        updatedAt:
+          type: string
+          format: string
+    inventoryWithHistory:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "64f825a8e1e529afedd53695"
+        productId:
+          type: string
+        sku:
+          type: string
+        quantity:
+          type: integer
+          format: int32
+          example: 10
+          default: 0
+        createdAt:
+          type: string
+          format: string
+        updatedAt:
+          type: string
+          format: string
+        histories:
+          type: array
+          items:
+            $ref: "#/components/schemas/history"
+    history:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "64f825a8e1e529afedd53695"
+        quantityChanged:
+          type: integer
+          format: int32
+          example: 10
+          default: 0
+        actionType:
+          type: string
+          example: "IN"
+        lastQuantity:
+          type: integer
+          format: int32
+          example: 10
+        newQuantity:
+          type: integer
+          format: int32
+          example: 10
+        createdAt:
+          type: string
+          format: string
+        updatedAt:
+          type: string
+          format: string
+  responses:
+    "400":
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+                example: 400
+              message:
+                type: string
+                example: Bad Request!
+              errors:
+                $ref: "#/components/schemas/400"
+    "404":
+      description: Resource Not Found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+                example: 404
+              error:
+                type: string
+                example: Not Found
+              message:
+                type: string
+                example: Requested resource not found
+    "405":
+      description: Method Not Allowed
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+                example: 405
+              error:
+                type: string
+                example: Method Not Allowed
+              message:
+                type: string
+                example: You are hiting on a invalid method
+    "500":
+      description: Server Error Occur
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+                example: 500
+              error:
+                type: string
+                example: Server Error
+              message:
+                type: string
+                example: Server Not Responding! Try again later.

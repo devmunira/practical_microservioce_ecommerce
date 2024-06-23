@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import prisma from "@/config/db";
 import { inventoryCreateDTOSchema } from "@/schema/index";
+import { InventoryServices } from "@/services/inventory.services";
 
 const createInventory = async (
   req: Request,
@@ -12,27 +13,13 @@ const createInventory = async (
     if (!parseBody.success) {
       return res.status(400).json({ error: parseBody.error.errors });
     }
+    const data = await new InventoryServices().createInventory(parseBody?.data);
 
-    // create inventory and history
-    const data = await prisma.inventory.create({
-      data: {
-        ...parseBody.data,
-        histories: {
-          create: {
-            actionType: "IN",
-            quantityChanged: parseBody?.data?.quantity || 0,
-            lastQuantity: 0,
-            newQuantity: parseBody?.data?.quantity || 0,
-          },
-        },
-      },
-      select: {
-        id: true,
-        quantity: true,
-      },
+    return res.status(201).json({
+      code: 201,
+      message: "Data Created!",
+      data,
     });
-
-    return res.status(201).json(data);
   } catch (error) {
     next(error);
   }
