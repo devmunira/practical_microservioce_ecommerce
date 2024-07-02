@@ -1,4 +1,4 @@
 export { default as createInventory } from "./createInventory";
-export { default as updateInventory } from "./updateInventory";
+export { updateInventory, updateInventoryByProductId } from "./updateInventory";
 export { default as getInventoryByIdWithDetails } from "./getInventoryByIdWithDetails";
-export { default as getInventoryById } from "./getInventoryById";
+export { getInventoryById } from "./getInventoryById";

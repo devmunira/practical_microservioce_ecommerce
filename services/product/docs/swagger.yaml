@@ -1,24 +1,24 @@
 openapi: 3.0.0
 servers:
   - description: Local Server
-    url: http://localhost:4002/api
+    url: http://localhost:4001/api
   - description: SwaggerHub API Auto Mocking
-    url: https://virtserver.swaggerhub.com/FSWFOFFICIAL/Ecom-Inventory/1.0.0
+    url: https://virtserver.swaggerhub.com/FSWFOFFICIAL/Ecom-Product/1.0.0
 info:
   version: "1.0.0"
-  title: Microservice E-commerce Project (Inventory Service)
-  description: This api documentation is for inventory service.
+  title: Microservice E-commerce Project (Product Service)
+  description: This api documentation is for Product service.
 tags:
   - name: Health
     description: Check Service is running on server
-  - name: Inventory Details
-    description: Get Single Inventory Details with Corresponding Histories
-  - name: Create Inventory
-    description: Create new Inventory with history
-  - name: Update Inventory
-    description: Update Inventory with History
-  - name: Get Inventory
-    description: Get only inventory data without history
+  - name: Product Details
+    description: Get Single Product Details with Corresponding Inventory Histories
+  - name: Create Product
+    description: Create new Product with Inventory
+  - name: Update Product
+    description: Update Product
+  - name: Get Product
+    description: Get only Product data without Inventory
 paths:
   "/health":
     get:
@@ -39,22 +39,22 @@ paths:
                   message:
                     type: string
                     format: text
-                    example: "Server health is okey"
+                    example: "Server health is okay"
         404:
           $ref: "#/components/responses/404"
         500:
           $ref: "#/components/responses/500"
         405:
           $ref: "#/components/responses/405"
-  "/inventories/{inventoryId}/histories":
+  "/products/{productId}/inventory":
     get:
       tags:
-        - Inventory Deatils
+        - Product Details with Inventory
       parameters:
-        - $ref: "#/components/parameters/inventoryId"
+        - $ref: "#/components/parameters/productId"
       responses:
         200:
-          description: "Data Retrive Successfully"
+          description: "Data Retrieve Successfully"
           content:
             application/json:
               schema:
@@ -67,33 +67,33 @@ paths:
                   message:
                     type: string
                     format: text
-                    example: "Data Retrive Successfully"
+                    example: "Data Retrieve Successfully"
                   data:
                     allOf:
-                      - $ref: "#/components/schemas/inventoryWithHistory"
+                      - $ref: "#/components/schemas/ProductWithHistory"
         404:
           $ref: "#/components/responses/404"
         500:
           $ref: "#/components/responses/500"
         405:
           $ref: "#/components/responses/405"
-  "/inventories":
+  "/products":
     post:
       tags:
-        - Create Inventory
+        - Create Product
       requestBody:
         content:
           application/json:
             schema:
               allOf:
-                - $ref: "#/components/schemas/createInventory"
+                - $ref: "#/components/schemas/createProduct"
               required:
                 - sku
-                - quantity
-                - productId
+                - title
+                - price
       responses:
         201:
-          description: Inventory Created
+          description: Product Created
           content:
             application/json:
               schema:
@@ -105,33 +105,33 @@ paths:
                     example: 201
                   message:
                     type: string
-                    example: Inventory Created!
+                    example: Product Created!
                   data:
-                    $ref: "#/components/schemas/inventory"
+                    $ref: "#/components/schemas/Product"
         400:
           $ref: "#/components/responses/400"
         500:
           $ref: "#/components/responses/500"
         405:
           $ref: "#/components/responses/405"
-  "/inventories/{inventoryId}":
+  "/products/{productId}":
     put:
       tags:
-        - Update Inventory
+        - Update Product
       parameters:
-        - $ref: "#/components/parameters/inventoryId"
+        - $ref: "#/components/parameters/productId"
       requestBody:
         content:
           application/json:
             schema:
               allOf:
-                - $ref: "#/components/schemas/updateInventory"
+                - $ref: "#/components/schemas/updateProduct"
               required:
                 - actionType
                 - quantity
       responses:
         200:
-          description: Inventory Updated
+          description: Product Updated
           content:
             application/json:
               schema:
@@ -143,23 +143,23 @@ paths:
                     example: 200
                   message:
                     type: string
-                    example: Inventory Updated!
+                    example: Product Updated!
                   data:
-                    $ref: "#/components/schemas/inventoryWithHistory"
+                    $ref: "#/components/schemas/Product"
         400:
           $ref: "#/components/responses/400"
         500:
           $ref: "#/components/responses/500"
         405:
           $ref: "#/components/responses/405"
-    get:
+    delete:
       tags:
-        - Get Inventory
+        - Delete Product
       parameters:
-        - $ref: "#/components/parameters/inventoryId"
+        - $ref: "#/components/parameters/productId"
       responses:
         200:
-          description: "Data Retrive Successfully"
+          description: "Data Deleted Successfully"
           content:
             application/json:
               schema:
@@ -168,13 +168,11 @@ paths:
                   code:
                     type: integer
                     format: int32
-                    default: 200
+                    default: 204
                   message:
                     type: string
                     format: text
-                    example: "Data Retrive Successfully"
-                  data:
-                    $ref: "#/components/schemas/inventoryWithHistory"
+                    example: "Data Deleted Successfully"
         404:
           $ref: "#/components/responses/404"
         500:
@@ -184,10 +182,10 @@ paths:
 
 components:
   parameters:
-    inventoryId:
+    productId:
       required: true
       in: path
-      name: inventoryId
+      name: productId
       description: Hold unique key of any object
       schema:
         type: string
@@ -207,64 +205,119 @@ components:
           in:
             type: string
             example: body
-    createInventory:
+    createProduct:
       type: object
       properties:
-        productId:
+        inventoryId:
           type: string
+          example: "64f825a8e1e529afedd53695"
         sku:
           type: string
+          example: "product-1"
+        title:
+          type: string
+          example: "Microphone"
+        description:
+          type: string
+          example: ""
+        price:
+          type: number
+          format: float
+          example: 120
+        status:
+          type: string
+          example: "PUBLISHED"
         quantity:
           type: integer
           format: int32
           example: 10
           default: 0
-    updateInventory:
+    updateProduct:
       type: object
       properties:
-        actionType:
+        sku:
           type: string
-          example: "IN"
+          example: "product-1"
+        title:
+          type: string
+          example: "Microphone"
+        description:
+          type: string
+          example: ""
+        price:
+          type: number
+          format: float
+          example: 120
+        status:
+          type: string
+          example: "PUBLISHED"
         quantity:
           type: integer
           format: int32
           example: 10
-    inventory:
+          default: 0
+    Product:
       type: object
       properties:
         id:
           type: string
           example: "64f825a8e1e529afedd53695"
-        productId:
+        inventoryId:
           type: string
+          example: "64f825a8e1e529afedd53695"
         sku:
           type: string
-        quantity:
-          type: integer
-          format: int32
-          example: 10
-          default: 0
+          example: "product-1"
+        title:
+          type: string
+          example: "Microphone"
+        description:
+          type: string
+          example: ""
+        price:
+          type: number
+          format: float
+          example: 120
+        status:
+          type: string
+          example: "PUBLISHED"
         createdAt:
           type: string
           format: string
         updatedAt:
           type: string
           format: string
-    inventoryWithHistory:
+    ProductWithHistory:
       type: object
       properties:
         id:
           type: string
           example: "64f825a8e1e529afedd53695"
-        productId:
+        title:
           type: string
-        sku:
+          example: "Microphone"
+        description:
           type: string
+          example: "This is product description"
+        price:
+          type: integer
+          format: int32
+          example: 10
+          default: 1000
         quantity:
           type: integer
           format: int32
           example: 10
-          default: 0
+          default: 1
+        sku:
+          type: string
+          example: 123
+        status:
+          type: string
+          example: PUBLISHED
+        inventoryId:
+          type: string
+          example: "64f825a8e1e529afedd53695"
         createdAt:
           type: string
           format: string

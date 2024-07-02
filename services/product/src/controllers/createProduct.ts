@@ -1,22 +1,22 @@
 import { Request, Response, NextFunction } from "express";
-import { inventoryCreateDTOSchema } from "@/schema/index";
-import { InventoryServices } from "@/services/inventory.services";
+import { ProductServices } from "@/services/product.services";
+import { productCreateDTOSchema } from "@/schema";
 
-const createInventory = async (
+const createProduct = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    const parseBody = inventoryCreateDTOSchema.safeParse(req.body);
+    const parseBody = productCreateDTOSchema.safeParse(req.body);
     if (!parseBody.success) {
       return res.status(400).json({ error: parseBody.error.errors });
     }
-    const data = await new InventoryServices().createInventory(parseBody?.data);
+    const data = await new ProductServices().createProduct(parseBody?.data);
 
     return res.status(201).json({
       code: 201,
-      message: "Data Created!",
+      message: "Product Created!",
       ...data,
     });
   } catch (error) {
@@ -25,4 +25,4 @@ const createInventory = async (
   }
 };
 
-export default createInventory;
+export default createProduct;

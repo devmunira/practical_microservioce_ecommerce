@@ -1,6 +1,7 @@
 import prisma from "@/config/db";
 import { InventoryCreateDTO, InventoryUpdateDTO } from "@/schema";
 import { NotFoundError } from "@/utils";
+import { Prisma } from "@prisma/client";
 
 export class InventoryServices {
   constructor() {}
@@ -27,9 +28,18 @@ export class InventoryServices {
   }
 
   // Update inventory
-  async updateInventory(inventoryId: string, dto: InventoryUpdateDTO) {
+  async updateInventory(
+    id: string,
+    dto: InventoryUpdateDTO,
+    field: "id" | "productId" = "id"
+  ) {
+    let where: Prisma.InventoryWhereUniqueInput = { id: id };
+
+    if (field === "productId") {
+      where = { productId: id };
+    }
     const inventoryData = await prisma.inventory.findUnique({
-      where: { id: inventoryId },
+      where,
     });
 
     if (!inventoryData) {
@@ -52,7 +62,7 @@ export class InventoryServices {
 
     // update inventory qty && create new entry on history
     return await prisma.inventory.update({
-      where: { id: inventoryId },
+      where,
       data: {
         quantity: newQuantity,
         histories: {
@@ -96,5 +106,35 @@ export class InventoryServices {
     }
 
     return data;
+  }
+
+  // get inventory by productId
+  async getInventoryDetailsByProductId(productId: string) {
+    const data = await prisma.inventory.findFirst({
+      where: { productId: productId },
+    });
+    if (!data) {
+      throw new NotFoundError("Inventory Data Not Found");
+    }
+
+    return data;
+  }
+
+  // Get inventory
+  async getLastInventoryUpdateDetails(productId: string) {
+    const inventory = await prisma.inventory.findFirst({
+      where: { productId: productId },
+    });
+
+    if (!inventory) {
+      return false;
+    }
+
+    const lastHistory = await prisma.history.findFirst({
+      where: { inventoryId: inventory?.id },
+      orderBy: { createdAt: "desc" },
+    });
+
+    return lastHistory;
   }
 }
