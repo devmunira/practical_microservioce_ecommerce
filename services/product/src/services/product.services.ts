@@ -172,6 +172,11 @@ export class ProductServices {
     return data;
   }
 
+  // Get all Products
+  async getProducts() {
+    return await prisma.product.findMany();
+  }
+
   // Delete Product
   async deleteProduct(productId: string) {
     const product = await prisma.product.findFirst({

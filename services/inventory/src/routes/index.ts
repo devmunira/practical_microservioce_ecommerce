@@ -43,11 +43,7 @@ router.get(
   methodNotAllowed("get"),
   getInventoryById
 );
-router.get(
-  "/inventories/:inventoryId",
-  methodNotAllowed("get"),
-  getInventoryById
-);
+
 router.post("/inventories", methodNotAllowed("post"), createInventory);
 
 export default router;

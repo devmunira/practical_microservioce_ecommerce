@@ -4,6 +4,7 @@ import {
   getProductById,
   getProductByIdWithDetails,
   updateProduct,
+  getProducts,
 } from "@/controllers";
 import { methodNotAllowed } from "@/middlewares";
 import express from "express";
@@ -15,6 +16,7 @@ router.get(
   getProductByIdWithDetails
 );
 router.post("/products", methodNotAllowed("post"), createProduct);
+router.get("/products", methodNotAllowed("get"), getProducts);
 router.put("/products/:productId", methodNotAllowed("put"), updateProduct);
 router.delete(
   "/products/:productId",

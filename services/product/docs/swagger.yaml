@@ -11,13 +11,11 @@ info:
 tags:
   - name: Health
     description: Check Service is running on server
-  - name: Product Details
-    description: Get Single Product Details with Corresponding Inventory Histories
   - name: Create Product
     description: Create new Product with Inventory
   - name: Update Product
     description: Update Product
-  - name: Get Product
+  - name: Get Products
     description: Get only Product data without Inventory
 paths:
   "/health":
@@ -114,6 +112,35 @@ paths:
           $ref: "#/components/responses/500"
         405:
           $ref: "#/components/responses/405"
+    get:
+      tags:
+        - Get Products
+      responses:
+        200:
+          description:
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                    default: 200
+                  message:
+                    type: string
+                    format: text
+                    example: "Data Retrieve Successfully"
+                  data:
+                    type: array
+                    items:
+                      allOf:
+                        - $ref: "#/components/schemas/Product"
+        500:
+          $ref: "#/components/responses/500"
+        405:
+          $ref: "#/components/responses/405"
+
   "/products/{productId}":
     put:
       tags:
