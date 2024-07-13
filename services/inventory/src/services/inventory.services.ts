@@ -116,7 +116,6 @@ export class InventoryServices {
     if (!data) {
       throw new NotFoundError("Inventory Data Not Found");
     }
-
     return data;
   }
 
@@ -136,5 +135,13 @@ export class InventoryServices {
     });
 
     return lastHistory;
+  }
+
+  // delete inventory
+  async deleteInventory(inventoryId: string) {
+    return await prisma.$transaction(async () => {
+      await prisma.history.deleteMany({ where: { inventoryId } });
+      await prisma.inventory.delete({ where: { id: inventoryId } });
+    });
   }
 }

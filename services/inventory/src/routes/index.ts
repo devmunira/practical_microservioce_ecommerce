@@ -1,5 +1,6 @@
 import {
   createInventory,
+  deleteInventoryWithHistory,
   getInventoryById,
   getInventoryByIdWithDetails,
   updateInventory,
@@ -10,6 +11,7 @@ import {
   getLastHistoryByProductId,
 } from "@/controllers/getInventoryById";
 import { methodNotAllowed } from "@/middlewares";
+import originChecker from "@/middlewares/originChecker";
 import express from "express";
 const router = express.Router();
 
@@ -44,6 +46,19 @@ router.get(
   getInventoryById
 );
 
-router.post("/inventories", methodNotAllowed("post"), createInventory);
+router.delete(
+  "/inventories/:inventoryId",
+  methodNotAllowed("delete"),
+  deleteInventoryWithHistory
+);
+
+router.post(
+  "/inventories",
+  methodNotAllowed("post"),
+  originChecker([
+    process.env.CREATE_INVENTORY_ORIGIN || "http://localhost:4001",
+  ]),
+  createInventory
+);
 
 export default router;

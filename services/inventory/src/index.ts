@@ -16,15 +16,11 @@ app.use(express.json());
 app.use(cors());
 app.use(morgan("dev"));
 
-app.get(
-  "/api/health",
-  methodNotAllowed("get"),
-  (_req: Request, res: Response) => {
-    res.status(200).json({ code: 200, message: "Server health is okey" });
-  }
-);
+app.get("/health", methodNotAllowed("get"), (_req: Request, res: Response) => {
+  res.status(200).json({ code: 200, message: "Server health is okey" });
+});
 
-app.use("/api", router);
+app.use("/", router);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 // 404 handler

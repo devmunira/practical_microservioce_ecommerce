@@ -1,43 +1,48 @@
-import morgan from "morgan";
-import express, { Request, Response, NextFunction } from "express";
+import express, { Request, Response } from "express";
 import dotenv from "dotenv";
+import morgan from "morgan";
 import cors from "cors";
 import helmet from "helmet";
-import { errorHandler } from "./middlewares";
 import rateLimit from "express-rate-limit";
+import swaggerUi from "swagger-ui-express";
+import YAML from "yamljs";
+import { errorHandler } from "./middlewares";
 import { customHandler } from "./library/customHandler";
+const swaggerDocs = YAML.load("docs/swagger.yaml");
 
-const app = express();
 dotenv.config();
-app.use([cors(), express.json(), morgan("dev"), helmet()]);
-
+const app = express();
 const SERVICE_NAME = process.env.SERVICE_NAME || "api-gateway-service";
 const PORT = process.env.PORT || 4000;
 
-app.get("/health", (_req: Request, res: Response, next: NextFunction) => {
+app.use(cors());
+app.use(helmet());
+app.use(express.json());
+app.use(morgan("dev"));
+
+app.get("/api/health", (_req: Request, res: Response) => {
   res.status(200).json({
     code: 200,
     message: `${SERVICE_NAME} is okay!`,
   });
 });
 
-// rate limiter
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+
 const rateLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, //15 mins rate limit
+  windowMs: 15 * 60 * 1000, // 15 mins
   max: 100,
   handler: (_req, res) => {
     res.status(429).json({
       code: 429,
-      message: "Too many request, please try again later",
+      message: "Too many requests, please try again later",
     });
   },
 });
 
-// All Routes
 app.use("/api", rateLimiter);
 customHandler(app);
 
-// Not found handler
 app.use((_req, res) => {
   res.status(404).json({
     code: 404,
@@ -46,10 +51,8 @@ app.use((_req, res) => {
   });
 });
 
-// Error Handler
 app.use(errorHandler);
 
-// Server Running
 app.listen(PORT, () => {
   console.log(`${SERVICE_NAME} is running on port ${PORT}`);
 });

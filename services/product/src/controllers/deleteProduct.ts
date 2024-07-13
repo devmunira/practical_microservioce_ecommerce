@@ -8,9 +8,9 @@ const deleteProduct = async (
 ) => {
   try {
     // check Product is exists
-    const { ProductId } = req.params;
+    const { productId } = req.params;
 
-    await new ProductServices().deleteProduct(ProductId);
+    await new ProductServices().deleteProduct(productId);
 
     // return updated data
     return res.status(204).json({

@@ -7,8 +7,8 @@ const getProductById = async (
   next: NextFunction
 ) => {
   try {
-    const { inventoryId } = req.params;
-    const data = await new ProductServices().getProductById(inventoryId);
+    const { productId } = req.params;
+    const data = await new ProductServices().getProductById(productId);
     return res.status(200).json({
       code: 200,
       message: "Data Retrieve Successfully",

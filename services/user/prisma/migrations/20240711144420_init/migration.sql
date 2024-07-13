@@ -1,0 +1,16 @@
+-- CreateTable
+CREATE TABLE "User" (
+    "id" TEXT NOT NULL,
+    "authUserId" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "email" TEXT NOT NULL,
+    "address" TEXT,
+    "phone" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "User_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateIndex
+CREATE INDEX "User_authUserId_idx" ON "User"("authUserId");

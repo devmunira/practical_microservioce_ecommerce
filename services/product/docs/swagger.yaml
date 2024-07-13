@@ -1,7 +1,7 @@
 openapi: 3.0.0
 servers:
   - description: Local Server
-    url: http://localhost:4001/api
+    url: http://localhost:4001
   - description: SwaggerHub API Auto Mocking
     url: https://virtserver.swaggerhub.com/FSWFOFFICIAL/Ecom-Product/1.0.0
 info:

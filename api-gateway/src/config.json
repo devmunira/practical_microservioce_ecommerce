@@ -4,15 +4,15 @@
       "url": "http://localhost:4002",
       "routes": [
         {
-          "path": "inventories/product/:productId",
+          "path": "/inventories/:inventoryId/histories",
           "methods": ["get"]
         },
         {
-          "path": "inventories/:inventoryId/histories",
+          "path": "/inventories/product/:productId",
           "methods": ["get"]
         },
         {
-          "path": "inventories/:inventoryId",
+          "path": "/inventories/:inventoryId",
           "methods": ["get", "put"]
         }
       ]
@@ -26,6 +26,19 @@
         },
         {
           "path": "/products/:productId",
+          "methods": ["get", "put", "delete"]
+        }
+      ]
+    },
+    "user": {
+      "url": "http://localhost:4004",
+      "routes": [
+        {
+          "path": "/users",
+          "methods": ["get", "post"]
+        },
+        {
+          "path": "/users/:userId",
           "methods": ["get", "put", "delete"]
         }
       ]

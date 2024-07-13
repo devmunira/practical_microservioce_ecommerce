@@ -7,7 +7,6 @@ export const productCreateDTOSchema = z.object({
   description: z.string().max(1000).optional(),
   price: z.number().optional().default(0),
   status: z.nativeEnum(Status).optional().default(Status.DRAFT),
-  quantity: z.number().int().default(1),
 });
 
 export const productUpdateDTOSchema = productCreateDTOSchema.partial();

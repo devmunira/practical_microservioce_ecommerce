@@ -1,0 +1,729 @@
+openapi: 3.1.0
+info:
+  version: "1.0.0"
+  title: Microservice E-commerce Project (API Gateway)
+  description: This API documentation is for the e-commerce project.
+
+servers:
+  - description: Local Server
+    url: http://localhost:4000/api
+paths:
+  "/health":
+    get:
+      responses:
+        200:
+          description: "Service is running"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                    default: 200
+                  message:
+                    type: string
+                    format: text
+                    example: "Server health is okay"
+        404:
+          $ref: "#/components/responses/404"
+        500:
+          $ref: "#/components/responses/500"
+        405:
+          $ref: "#/components/responses/405"
+  "/inventories/{inventoryId}/histories":
+    get:
+      parameters:
+        - $ref: "#/components/parameters/inventoryId"
+      responses:
+        200:
+          description: "Data retrieved successfully"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                    default: 200
+                  message:
+                    type: string
+                    format: text
+                    example: "Data retrieved successfully"
+                  data:
+                    allOf:
+                      - $ref: "#/components/schemas/inventoryWithHistory"
+        404:
+          $ref: "#/components/responses/404"
+        500:
+          $ref: "#/components/responses/500"
+        405:
+          $ref: "#/components/responses/405"
+  "/inventories/{inventoryId}":
+    put:
+      parameters:
+        - $ref: "#/components/parameters/inventoryId"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "#/components/schemas/updateInventory"
+              required:
+                - actionType
+                - quantity
+      responses:
+        200:
+          description: Inventory updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                    example: 200
+                  message:
+                    type: string
+                    example: Inventory updated!
+                  data:
+                    $ref: "#/components/schemas/inventoryWithHistory"
+        400:
+          $ref: "#/components/responses/400"
+        500:
+          $ref: "#/components/responses/500"
+        405:
+          $ref: "#/components/responses/405"
+    get:
+      parameters:
+        - $ref: "#/components/parameters/inventoryId"
+      responses:
+        200:
+          description: "Data retrieved successfully"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                    default: 200
+                  message:
+                    type: string
+                    format: text
+                    example: "Data retrieved successfully"
+                  data:
+                    $ref: "#/components/schemas/inventoryWithHistory"
+        404:
+          $ref: "#/components/responses/404"
+        500:
+          $ref: "#/components/responses/500"
+        405:
+          $ref: "#/components/responses/405"
+  "/inventories/product/{productId}":
+    get:
+      parameters:
+        - $ref: "#/components/parameters/productId"
+      responses:
+        200:
+          description: "Data retrieved successfully"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                    default: 200
+                  message:
+                    type: string
+                    format: text
+                    example: "Data retrieved successfully"
+                  data:
+                    $ref: "#/components/schemas/Product"
+        404:
+          $ref: "#/components/responses/404"
+        500:
+          $ref: "#/components/responses/500"
+        405:
+          $ref: "#/components/responses/405"
+  "/products":
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "#/components/schemas/createProduct"
+              required:
+                - sku
+                - title
+                - price
+      responses:
+        201:
+          description: Product Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                    example: 201
+                  message:
+                    type: string
+                    example: Product Created!
+                  data:
+                    $ref: "#/components/schemas/Product"
+        400:
+          $ref: "#/components/responses/400"
+        500:
+          $ref: "#/components/responses/500"
+        405:
+          $ref: "#/components/responses/405"
+    get:
+      responses:
+        200:
+          description: "Data retrieved successfully"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                    default: 200
+                  message:
+                    type: string
+                    format: text
+                    example: "Data retrieved successfully"
+                  data:
+                    $ref: "#/components/schemas/inventoryWithHistory"
+        404:
+          $ref: "#/components/responses/404"
+        500:
+          $ref: "#/components/responses/500"
+        405:
+          $ref: "#/components/responses/405"
+  "/products/{productId}":
+    put:
+      parameters:
+        - $ref: "#/components/parameters/productId"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "#/components/schemas/updateProduct"
+              required:
+                - actionType
+                - quantity
+      responses:
+        200:
+          description: Product updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                    example: 200
+                  message:
+                    type: string
+                    example: Product updated!
+                  data:
+                    $ref: "#/components/schemas/Product"
+        400:
+          $ref: "#/components/responses/400"
+        500:
+          $ref: "#/components/responses/500"
+        405:
+          $ref: "#/components/responses/405"
+    delete:
+      parameters:
+        - $ref: "#/components/parameters/productId"
+      responses:
+        200:
+          description: "Data deleted successfully"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                    default: 204
+                  message:
+                    type: string
+                    format: text
+                    example: "Data deleted successfully"
+        404:
+          $ref: "#/components/responses/404"
+        500:
+          $ref: "#/components/responses/500"
+        405:
+          $ref: "#/components/responses/405"
+    get:
+      parameters:
+        - $ref: "#/components/parameters/productId"
+      responses:
+        200:
+          description: "Data retrieved successfully"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                    default: 200
+                  message:
+                    type: string
+                    format: text
+                    example: "Data retrieved successfully"
+                  data:
+                    allOf:
+                      - $ref: "#/components/schemas/ProductWithHistory"
+        404:
+          $ref: "#/components/responses/404"
+        500:
+          $ref: "#/components/responses/500"
+        405:
+          $ref: "#/components/responses/405"
+  "/users":
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "#/components/schemas/createUser"
+              required:
+                - name
+                - email
+                - authUserId
+      responses:
+        201:
+          description: User Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                    example: 201
+                  message:
+                    type: string
+                    example: User Created!
+                  data:
+                    $ref: "#/components/schemas/user"
+        400:
+          $ref: "#/components/responses/400"
+        500:
+          $ref: "#/components/responses/500"
+        405:
+          $ref: "#/components/responses/405"
+    get:
+      responses:
+        200:
+          description:
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                    default: 200
+                  message:
+                    type: string
+                    format: text
+                    example: "Data Retrieve Successfully"
+                  data:
+                    type: array
+                    items:
+                      allOf:
+                        - $ref: "#/components/schemas/User"
+        500:
+          $ref: "#/components/responses/500"
+        405:
+          $ref: "#/components/responses/405"
+  "/users/{userId}":
+    get:
+      parameters:
+        - $ref: "#/components/parameters/userId"
+      responses:
+        200:
+          description:
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                    default: 200
+                  message:
+                    type: string
+                    format: text
+                    example: "Data Retrieve Successfully"
+                  data:
+                    type: array
+                    items:
+                      allOf:
+                        - $ref: "#/components/schemas/user"
+        500:
+          $ref: "#/components/responses/500"
+        405:
+          $ref: "#/components/responses/405"
+    put:
+      parameters:
+        - $ref: "#/components/parameters/userId"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "#/components/schemas/updateUser"
+      responses:
+        200:
+          description: User Updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                    example: 200
+                  message:
+                    type: string
+                    example: User Updated!
+                  data:
+                    $ref: "#/components/schemas/user"
+        400:
+          $ref: "#/components/responses/400"
+        500:
+          $ref: "#/components/responses/500"
+        405:
+          $ref: "#/components/responses/405"
+    delete:
+      parameters:
+        - $ref: "#/components/parameters/userId"
+      responses:
+        200:
+          description: "Data Deleted Successfully"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                    default: 204
+                  message:
+                    type: string
+                    format: text
+                    example: "Data Deleted Successfully"
+        404:
+          $ref: "#/components/responses/404"
+        500:
+          $ref: "#/components/responses/500"
+        405:
+          $ref: "#/components/responses/405"
+components:
+  parameters:
+    userId:
+      required: true
+      in: path
+      name: userId
+      description: Hold unique key of any object
+      schema:
+        type: string
+        example: "64f825a8e1e529afedd53695"
+    inventoryId:
+      required: true
+      in: path
+      name: inventoryId
+      schema:
+        type: string
+      description: The ID of the inventory
+    productId:
+      required: true
+      in: path
+      name: productId
+      schema:
+        type: string
+      description: The ID of the product
+  schemas:
+    createProduct:
+      type: object
+      properties:
+        inventoryId:
+          type: string
+          example: "64f825a8e1e529afedd53695"
+        sku:
+          type: string
+          example: "product-1"
+        title:
+          type: string
+          example: "Microphone"
+        description:
+          type: string
+          example: ""
+        price:
+          type: number
+          format: float
+          example: 120
+        status:
+          type: string
+          example: "PUBLISHED"
+        quantity:
+          type: integer
+          format: int32
+          example: 10
+          default: 0
+    inventoryWithHistory:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+          example: 123
+        sku:
+          type: string
+          example: "SK12345"
+        quantity:
+          type: integer
+          example: 100
+        history:
+          type: array
+          items:
+            type: object
+            properties:
+              timestamp:
+                type: string
+                format: date-time
+                example: "2023-06-15T08:00:00Z"
+              actionType:
+                type: string
+                example: "add"
+              quantity:
+                type: integer
+                example: 20
+    createInventory:
+      type: object
+      properties:
+        sku:
+          type: string
+          example: "SK12345"
+        quantity:
+          type: integer
+          example: 100
+        productId:
+          type: integer
+          example: 1
+    updateInventory:
+      type: object
+      properties:
+        actionType:
+          type: string
+          example: "add"
+        quantity:
+          type: integer
+          example: 20
+    Product:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+          example: 123
+        name:
+          type: string
+          example: "Product name"
+        description:
+          type: string
+          example: "Product description"
+        price:
+          type: number
+          format: float
+          example: 19.99
+        inventory:
+          type: object
+          properties:
+            sku:
+              type: string
+              example: "SK12345"
+            quantity:
+              type: integer
+              example: 100
+            productId:
+              type: string
+              example: c3e347b8-85d3-4129-95ec-38944162ce00
+    updateProduct:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "Updated product name"
+        description:
+          type: string
+          example: "Updated product description"
+        price:
+          type: number
+          format: float
+          example: 29.99
+    ProductWithHistory:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+          example: 123
+        name:
+          type: string
+          example: "Product name"
+        description:
+          type: string
+          example: "Product description"
+        price:
+          type: number
+          format: float
+          example: 19.99
+        inventory:
+          $ref: "#/components/schemas/inventoryWithHistory"
+    createUser:
+      type: object
+      properties:
+        authUserId:
+          type: string
+          example: "64f825a8e1e529afedd53695"
+        name:
+          type: string
+          example: "Munira"
+        email:
+          type: string
+          example: "munira.learn@gmail.com"
+        address:
+          type: string
+          example: "Mount Roskill"
+        phone:
+          type: string
+          example: +8801881959920
+    updateUser:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "Munira"
+        email:
+          type: string
+          example: "munira.learn@gmail.com"
+        address:
+          type: string
+          example: "Mount Roskill"
+        phone:
+          type: string
+          example: +8801881959920
+    user:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "64f825a8e1e529afedd53695"
+        authUserId:
+          type: string
+          example: "64f825a8e1e529afedd53695"
+        name:
+          type: string
+          example: "Munira"
+        email:
+          type: string
+          example: "munira.learn@gmail.com"
+        address:
+          type: string
+          example: "Mount Roskill"
+        phone:
+          type: string
+          example: +8801881959920
+        createdAt:
+          type: string
+          format: string
+        updatedAt:
+          type: string
+          format: string
+  responses:
+    400:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+                example: 400
+              message:
+                type: string
+                example: Bad request, please check your request
+    404:
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+                example: 404
+              message:
+                type: string
+                example: Not Found
+    405:
+      description: Method Not Allowed
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+                example: 405
+              message:
+                type: string
+                example: Method Not Allowed
+    500:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+                example: 500
+              message:
+                type: string
+                example: Internal Server Error

@@ -13,8 +13,6 @@ const getProductByIdWithDetails = async (
       productId
     );
 
-    console.log(data);
-
     return res.status(200).json({
       code: 200,
       message: "Data Retrieve Successfully",

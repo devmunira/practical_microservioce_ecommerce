@@ -22,7 +22,6 @@ app.use((_req, res) => {
 
 // Error handler
 app.use((err: any, _req: Request, res: Response) => {
-  console.log(err.stack);
   res.status(500).json({ message: "Internal Server Error" });
 });
 

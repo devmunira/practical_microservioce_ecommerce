@@ -16,7 +16,7 @@ const errorHandler = (
 
   return res.status(500).json({
     code: 500,
-    error: "Server Error",
+    error: err,
     message: "Server Not Responding! Try again later.",
   });
 };
