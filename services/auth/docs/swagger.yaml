@@ -1,0 +1,362 @@
+openapi: 3.0.0
+servers:
+  - description: Local Server
+    url: http://localhost:4003
+info:
+  version: "1.0.0"
+  title: Microservice E-commerce Project (Auth Service)
+  description: This api documentation is for Auth service.
+paths:
+  "/health":
+    get:
+      tags:
+        - Health
+      responses:
+        200:
+          description: "Service is running"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                    default: 200
+                  message:
+                    type: string
+                    format: text
+                    example: "Server health is okay"
+        404:
+          $ref: "#/components/responses/404"
+        500:
+          $ref: "#/components/responses/500"
+        405:
+          $ref: "#/components/responses/405"
+  "/login":
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "#/components/schemas/login"
+              required:
+                - email
+                - password
+      responses:
+        200:
+          description: Login Successfully Done!
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                    example: 200
+                  message:
+                    type: string
+                    example: User Created!
+                  data:
+                    $ref: "#/components/schemas/data"
+        400:
+          $ref: "#/components/responses/400"
+        500:
+          $ref: "#/components/responses/500"
+        405:
+          $ref: "#/components/responses/405"
+  "/register":
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "#/components/schemas/register"
+              required:
+                - name
+                - email
+                - password
+      responses:
+        201:
+          description: Register Successfully Done!
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                    example: 201
+                  message:
+                    type: string
+                    example: Register Successfully Done!
+                  data:
+                    $ref: "#/components/schemas/authUser"
+        400:
+          $ref: "#/components/responses/400"
+        500:
+          $ref: "#/components/responses/500"
+        405:
+          $ref: "#/components/responses/405"
+  "/checkpoint":
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token:
+                  type: string
+                  example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbHlvczIyOWowMDAwd2tkNzUzZWdjdTYzIiwiZW1haWwiOiJtdW5pcmErYWRtaW5AZ21haWwuY29tIiwicm9sZSI6IkFETUlOIiwibmFtZSI6Ik11bmlyYSIsImlhdCI6MTcyMTE1NjU2NSwiZXhwIjoxNzIxMTYzNzY1fQ.aen7OElYRY72bzXBSmPZEKkicjzamlD3fvTc6zT16-c"
+              required:
+                - token
+      responses:
+        200:
+          description: Access Token Verification
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                    example: 200
+                  message:
+                    type: string
+                    example: Authorized
+                  data:
+                    $ref: "#/components/schemas/verifyToken"
+        400:
+          $ref: "#/components/responses/400"
+        401:
+          $ref: "#/components/responses/401"
+        500:
+          $ref: "#/components/responses/500"
+        405:
+          $ref: "#/components/responses/405"
+  "/verify-token":
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token:
+                  type: number
+                  example: 23456
+                email:
+                  type: string
+                  example: "muniraweb@gmail.com"
+                type:
+                  type: string
+                  example: "ACCOUNT_ACTIVATION"
+              required:
+                - token
+                - email
+                - type
+      responses:
+        200:
+          description: Verification Complete
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                    example: 200
+                  message:
+                    type: string
+                    example: Verification Complete
+                  data:
+                    $ref: "#/components/schemas/authUser"
+        400:
+          $ref: "#/components/responses/400"
+        500:
+          $ref: "#/components/responses/500"
+        405:
+          $ref: "#/components/responses/405"
+        401:
+          $ref: "#/components/responses/401"
+components:
+  schemas:
+    400:
+      type: array
+      items:
+        type: object
+        properties:
+          fields:
+            type: string
+            example: username
+          message:
+            type: string
+            example: username max length is 20 Letters
+          in:
+            type: string
+            example: body
+    register:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+          example: "Munira"
+        email:
+          type: string
+          example: "munira.learn@gmail.com"
+        password:
+          type: string
+          example: "200720200!@#"
+        role:
+          type: string
+          example: USER
+        isVerified:
+          type: string
+          example: true
+        status:
+          type: string
+          example: PENDING
+    authUser:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+          example: "Munira"
+        email:
+          type: string
+          example: "munira.learn@gmail.com"
+        password:
+          type: string
+          example: "200720200!@#"
+        role:
+          type: string
+          example: USER
+        isVerified:
+          type: string
+          example: true
+        status:
+          type: string
+          example: PENDING
+    login:
+      type: object
+      properties:
+        email:
+          type: string
+          example: "munira.learn@gmail.com"
+        password:
+          type: string
+          example: "200720200!@#"
+    data:
+      type: object
+      properties:
+        authToken:
+          type: string
+          example: "64f825a8e1e529afedd53695"
+    verifyToken:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "64f825a8e1e529afedd53695"
+        name:
+          type: string
+          example: "Munira"
+        email:
+          type: string
+          example: "munira.learn@gmail.com"
+        role:
+          type: string
+          example: USER
+  responses:
+    "400":
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+                example: 400
+              message:
+                type: string
+                example: Bad Request!
+              errors:
+                $ref: "#/components/schemas/400"
+    "404":
+      description: Resource Not Found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+                example: 404
+              error:
+                type: string
+                example: Not Found
+              message:
+                type: string
+                example: Requested resource not found
+    "401":
+      description: UnAuthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+                example: 401
+              message:
+                type: string
+                example: UnAuthorized
+    "405":
+      description: Method Not Allowed
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+                example: 405
+              error:
+                type: string
+                example: Method Not Allowed
+              message:
+                type: string
+                example: You are hiting on a invalid method
+    "500":
+      description: Server Error Occur
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+                example: 500
+              error:
+                type: string
+                example: Server Error
+              message:
+                type: string
+                example: Server Not Responding! Try again later.

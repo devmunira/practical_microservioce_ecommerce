@@ -28,5 +28,14 @@ services:
     ports:
       - "5051:443"
       - "5050:80"
+  mailhog:
+    image: mailhog/mailhog
+    container_name: ecom-mailhog
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+    volumes:
+      - ecomMailhog:/var/lib/mailhog
 volumes:
   postgres:
+  ecomMailhog:

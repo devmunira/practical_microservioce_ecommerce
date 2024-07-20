@@ -7,7 +7,6 @@ import router from "./routes";
 import swaggerUi from "swagger-ui-express";
 import YAML from "yamljs";
 import { errorHandler, methodNotAllowed } from "./middlewares";
-import { originGuard } from "./middlewares/originGuard";
 const swaggerDocs = YAML.load("docs/swagger.yaml");
 
 dotenv.config();
@@ -38,8 +37,8 @@ app.use((_req, res) => {
 // Global Error Handler
 app.use(errorHandler);
 
-const PORT = process.env.PORT || 4004;
-const serviceName = process.env.SERVICE_NAME || "user-service";
+const PORT = process.env.PORT || 4005;
+const serviceName = process.env.SERVICE_NAME || "email-service";
 
 // Server Running
 app.listen(PORT, () => {

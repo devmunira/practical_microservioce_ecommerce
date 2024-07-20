@@ -1,0 +1,77 @@
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum ROLE {
+  USER
+  ADMIN
+}
+
+enum STATUS  {
+  ACTIVE
+  INACTIVE
+  SUSPEND
+  PENDING
+}
+
+ enum LoginAttempt {
+  SUCCESS
+  FAILED
+}
+
+enum VErificationStatus {
+  PENDING
+  USED
+  EXPIRED
+}
+
+enum VerificationCodeType {
+  ACCOUNT_ACTIVATION
+  PASSWORD_RESET
+  EMAIL_CHANGE
+  PHONE_CHANGE
+  TWO_FACTOR_AUTH
+  TWO_FACTOR_AUTH_DISABLE
+}
+
+model Auth{
+  id String @id @default(cuid())
+  name String
+  email String @unique
+  password String
+  role ROLE @default(USER)
+  status STATUS @default(PENDING)
+  isVerified Boolean @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  loginHistories LoginHistory[]
+  verificationCodes VerificationCode[]
+}
+
+model LoginHistory {
+  id String @id @default(cuid())
+  authId String
+  auth Auth @relation(fields: [authId], references: [id], onDelete: Cascade)
+  ipAddress String?
+  userAgent String?
+  attempt LoginAttempt @default(SUCCESS)
+  loginAt DateTime @default(now())
+}
+
+model VerificationCode {
+  id String @id @default(cuid())
+  authUserId String
+  auth Auth @relation(fields: [authUserId], references: [id], onDelete: Cascade)
+  code String 
+  type VerificationCodeType @default(ACCOUNT_ACTIVATION)
+  issuedAt DateTime @default(now())
+  expiredAt DateTime?
+  verifiedAt DateTime?
+  isUsed Boolean @default(false)
+}

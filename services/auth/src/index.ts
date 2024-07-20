@@ -38,8 +38,8 @@ app.use((_req, res) => {
 // Global Error Handler
 app.use(errorHandler);
 
-const PORT = process.env.PORT || 4004;
-const serviceName = process.env.SERVICE_NAME || "user-service";
+const PORT = process.env.PORT || 4003;
+const serviceName = process.env.SERVICE_NAME || "auth-service";
 
 // Server Running
 app.listen(PORT, () => {

@@ -10,7 +10,6 @@ import { errorHandler, methodNotAllowed } from "./middlewares";
 const swaggerDocs = YAML.load("docs/swagger.yaml");
 
 dotenv.config();
-
 const app = express();
 app.use(express.json());
 app.use(cors());

@@ -6,7 +6,7 @@ export const originGuard = (
   res: Response,
   next: NextFunction
 ) => {
-  const acceptedOrigin = ["http://localhost:4000", "http://localhost:4003"];
+  const acceptedOrigin = ["http://localhost:4000"];
   const origin = req.headers.origin || "";
   if (!acceptedOrigin.includes(origin)) {
     throw new ForbiddenResourceError(
