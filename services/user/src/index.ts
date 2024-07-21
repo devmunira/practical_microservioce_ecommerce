@@ -23,7 +23,8 @@ app.get("/health", methodNotAllowed("get"), (_req: Request, res: Response) => {
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
-// app.use(originGuard);
+app.use(originGuard);
+
 app.use("/", router);
 
 // Not Found Handler

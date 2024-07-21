@@ -3,6 +3,7 @@ import axios from "axios";
 import apis from "config.json";
 import { Express, Request, Response } from "express";
 import colors from "colors";
+import { handleMiddlewares } from "./handleMiddlewares";
 
 export const Handler = (handlerParams: handlerParamsDto) => {
   const { hostname, path, method } = handlerParams;
@@ -51,13 +52,10 @@ export const customHandler = (app: Express) => {
     const hostname = service?.url;
     service?.routes?.forEach((route) => {
       route?.methods?.forEach((method) => {
-        console.log(
-          colors.bgBlue(
-            `Request is coming to - ${hostname}${route.path} on - ${method}`
-          )
-        );
+        const middlewares = handleMiddlewares(route.middlewares);
         app[method](
           `/api${route?.path}`,
+          middlewares,
           Handler({ hostname, path: route.path, method })
         );
       });

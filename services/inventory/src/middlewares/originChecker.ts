@@ -1,16 +1,16 @@
+import { ForbiddenResourceError } from "@/utils/customError";
 import { NextFunction, Request, Response } from "express";
 
-const originChecker = (origin: string[]) => {
+export const originGuard = (origins: string[]) => {
   return (req: Request, res: Response, next: NextFunction) => {
-    if (!origin.includes(req.headers.origin || "")) {
-      return res.status(405).json({
-        code: 405,
-        error: "Access Denied",
-        message: "Forbidden Resources",
-      });
+    const acceptedOrigin = ["http://localhost:4000", ...origins];
+    const origin = req.headers.origin || "";
+    if (!acceptedOrigin.includes(origin)) {
+      throw new ForbiddenResourceError(
+        "Forbidden Resources - Origin Not Allowed!"
+      );
+    } else {
+      next();
     }
-    next();
   };
 };
-
-export default originChecker;

@@ -1,19 +1,77 @@
 {
   "services": {
+    "user": {
+      "url": "http://localhost:4004",
+      "routes": [
+        {
+          "path": "/users",
+          "methods": ["get", "post"],
+          "middlewares": ["authentication", "isAdmin"]
+        },
+        {
+          "path": "/users/:userId",
+          "methods": ["put", "delete"],
+          "middlewares": ["authentication", "isAdmin"]
+        },
+        {
+          "path": "/users/:userId",
+          "methods": ["get"],
+          "middlewares": ["authentication"]
+        }
+      ]
+    },
+    "auth": {
+      "url": "http://localhost:4003",
+      "routes": [
+        {
+          "path": "/auth/register",
+          "methods": ["post"],
+          "middlewares": []
+        },
+        {
+          "path": "/auth/login",
+          "methods": ["post"],
+          "middlewares": []
+        },
+        {
+          "path": "/auth/checkpoint",
+          "methods": ["post"],
+          "middlewares": []
+        },
+        {
+          "path": "/auth/verify-token",
+          "methods": ["post"],
+          "middlewares": []
+        }
+      ]
+    },
+    "email": {
+      "url": "http://localhost:4005",
+      "routes": [
+        {
+          "path": "/emails",
+          "methods": ["get"],
+          "middlewares": ["authentication", "isAdmin"]
+        }
+      ]
+    },
     "inventory": {
       "url": "http://localhost:4002",
       "routes": [
         {
           "path": "/inventories/:inventoryId/histories",
-          "methods": ["get"]
+          "methods": ["get"],
+          "middlewares": []
         },
         {
           "path": "/inventories/product/:productId",
-          "methods": ["get"]
+          "methods": ["get"],
+          "middlewares": []
         },
         {
           "path": "/inventories/:inventoryId",
-          "methods": ["get", "put"]
+          "methods": ["get", "put"],
+          "middlewares": ["authentication", "isAdmin"]
         }
       ]
     },
@@ -22,24 +80,23 @@
       "routes": [
         {
           "path": "/products",
-          "methods": ["get", "post"]
+          "methods": ["post"],
+          "middlewares": ["authentication", "isAdmin"]
+        },
+        {
+          "path": "/products",
+          "methods": ["get"],
+          "middlewares": []
         },
         {
           "path": "/products/:productId",
-          "methods": ["get", "put", "delete"]
-        }
-      ]
-    },
-    "user": {
-      "url": "http://localhost:4004",
-      "routes": [
-        {
-          "path": "/users",
-          "methods": ["get", "post"]
+          "methods": ["put", "delete"],
+          "middlewares": ["authentication", "isAdmin"]
         },
         {
-          "path": "/users/:userId",
-          "methods": ["get", "put", "delete"]
+          "path": "/products/:productId",
+          "methods": ["get"],
+          "middlewares": []
         }
       ]
     }

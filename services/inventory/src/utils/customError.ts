@@ -26,4 +26,16 @@ class BadRequestError extends CustomError {
   }
 }
 
-export { NotFoundError, MethodNotAllowed, BadRequestError, CustomError };
+class ForbiddenResourceError extends CustomError {
+  constructor(message: string) {
+    super(message, "FORBIDDEN_RESOURCE", 403);
+  }
+}
+
+export {
+  NotFoundError,
+  MethodNotAllowed,
+  BadRequestError,
+  CustomError,
+  ForbiddenResourceError,
+};
