@@ -1,0 +1,233 @@
+openapi: 3.0.0
+servers:
+  - description: Local Server
+    url: http://localhost:4006
+info:
+  version: "1.0.0"
+  title: Microservice E-commerce Project (Cart Service)
+  description: This api documentation is for Cart service.
+paths:
+  "/health":
+    get:
+      tags:
+        - Health
+      responses:
+        200:
+          description: "Service is running"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                    default: 200
+                  message:
+                    type: string
+                    format: text
+                    example: "Server health is okay"
+        404:
+          $ref: "#/components/responses/404"
+        500:
+          $ref: "#/components/responses/500"
+        405:
+          $ref: "#/components/responses/405"
+  "/cart/add":
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "#/components/schemas/cartDto"
+              required:
+                - inventoryId
+                - productId
+                - quantity
+      responses:
+        201:
+          description: Product has been added to cart!
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                    example: 201
+                  message:
+                    type: string
+                    example: Product has been added to cart!
+                  cartSessionId:
+                    type: string
+                    example: "gifted-nagual-nsfw-dvds"
+        400:
+          $ref: "#/components/responses/400"
+        500:
+          $ref: "#/components/responses/500"
+        405:
+          $ref: "#/components/responses/405"
+  "/cart/clear":
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "#/components/schemas/cartSessionId"
+              required:
+                - cartSessionId
+      responses:
+        200:
+          description: Cart has been cleared from store!
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                    example: 200
+                  message:
+                    type: string
+                    example: Cart has been cleared from store!
+        400:
+          $ref: "#/components/responses/400"
+        404:
+          $ref: "#/components/responses/404"
+        500:
+          $ref: "#/components/responses/500"
+        405:
+          $ref: "#/components/responses/405"
+  "/cart/me":
+    get:
+      responses:
+        200:
+          description: Data Retrieve Successfully Done!
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                    example: 200
+                  message:
+                    type: string
+                    example: Data Retrieve Successfully Done!
+                  data:
+                    type: array
+                      items:
+                        - $ref: "#/components/schemas/emails"
+        400:
+          $ref: "#/components/responses/400"
+        500:
+          $ref: "#/components/responses/500"
+        405:
+          $ref: "#/components/responses/405"
+components:
+  schemas:
+    400:
+      type: array
+      items:
+        type: object
+        properties:
+          fields:
+            type: string
+            example: username
+          message:
+            type: string
+            example: username max length is 20 Letters
+          in:
+            type: string
+            example: body
+    cartDto:
+      type: object
+      properties:
+        inventoryId:
+          type: string
+          example: "64f825a8e1e529afedd53695"
+        productId:
+          type: string
+          example: "64f825a8e1e529afedd53695"
+        quantity:
+          type: int32
+          example: 7
+    cartSessionId:
+      type: object
+      properties:
+        cartSessionId:
+          type: string
+          example: "64f825a8e1e529afedd53695"
+  responses:
+    "400":
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+                example: 400
+              message:
+                type: string
+                example: Bad Request!
+              errors:
+                $ref: "#/components/schemas/400"
+    "404":
+      description: Resource Not Found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+                example: 404
+              error:
+                type: string
+                example: Not Found
+              message:
+                type: string
+                example: Requested resource not found
+    "405":
+      description: Method Not Allowed
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+                example: 405
+              error:
+                type: string
+                example: Method Not Allowed
+              message:
+                type: string
+                example: You are hiting on a invalid method
+    "500":
+      description: Server Error Occur
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+                example: 500
+              error:
+                type: string
+                example: Server Error
+              message:
+                type: string
+                example: Server Not Responding! Try again later.

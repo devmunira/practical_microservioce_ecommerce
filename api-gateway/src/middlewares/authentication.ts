@@ -34,6 +34,7 @@ export const authentication = async (
     req.headers["x-user-email"] = data.user.email;
     req.headers["x-user-name"] = data.user.name;
     req.headers["x-user-role"] = data.user.role;
+    req.headers["x-cart-session-id"] = req.headers["x-cart-session-id"] || "";
 
     next();
   } catch (error) {

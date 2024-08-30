@@ -99,6 +99,46 @@
           "middlewares": []
         }
       ]
+    },
+    "cart": {
+      "url": "http://localhost:4006",
+      "routes": [
+        {
+          "path": "/cart/add",
+          "methods": ["post"],
+          "middlewares": []
+        },
+        {
+          "path": "/cart/me",
+          "methods": ["get"],
+          "middlewares": []
+        },
+        {
+          "path": "/cart/clear",
+          "methods": ["delete"],
+          "middlewares": []
+        }
+      ]
+    },
+    "order": {
+      "url": "http://localhost:4007",
+      "routes": [
+        {
+          "path": "/orders/checkout",
+          "methods": ["post"],
+          "middlewares": ["authentication"]
+        },
+        {
+          "path": "/orders/:orderId",
+          "methods": ["get"],
+          "middlewares": ["authentication"]
+        },
+        {
+          "path": "/orders",
+          "methods": ["get"],
+          "middlewares": ["authentication", "isAdmin"]
+        }
+      ]
     }
   }
 }
