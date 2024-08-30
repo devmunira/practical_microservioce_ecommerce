@@ -1,9 +1,14 @@
-import { DefaultSenderAddress } from "@/config/email";
+import prisma from "@/config/db";
+import { DefaultSenderAddress, transporter } from "@/config/email";
 import { EmailSendingSchema } from "@/schema";
 import { Response, Request, NextFunction } from "express";
 
 // send Email
-export const SendEmail = async (req, res, next) => {
+export const SendEmail = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const parseBody = EmailSendingSchema.safeParse(req.body);
     if (parseBody.error) {
@@ -48,10 +53,13 @@ export const SendEmail = async (req, res, next) => {
   }
 };
 
-export const getEmails = async (req, res, next) => {
+export const getEmails = async (
+  _req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const data = await prisma.email.findMany();
-
     return res.status(200).json({
       code: 200,
       message: "Data Retrieve Successfully!",

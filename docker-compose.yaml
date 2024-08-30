@@ -14,7 +14,7 @@ services:
     ports:
       - "5432:5432"
     healthcheck:
-      test: ["CMD", "pg_isready", "-U", "auth"]
+      test: ["CMD", "pg_isready", "-U"]
       interval: 30s
       timeout: 30s
       retries: 3
