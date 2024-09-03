@@ -56,7 +56,7 @@ export const verifyToken = async (
 
     return res
       .status(200)
-      .json({ code: 200, message: "Verification Completed", data });
+      .json({ code: 200, message: "Verification Completed", user: data });
   } catch (error) {
     next(error);
   }

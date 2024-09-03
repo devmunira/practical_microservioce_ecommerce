@@ -60,7 +60,7 @@ const checkout = async (req: Request, res: Response, next: NextFunction) => {
         subtotal,
         tax,
         grandTotal,
-        orderItems: {
+        ordersItems: {
           create: productDetails.map((item) => ({
             ...item,
           })),

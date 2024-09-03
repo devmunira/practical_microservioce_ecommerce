@@ -10,6 +10,8 @@ servers:
 paths:
   "/health":
     get:
+      tags:
+        - Health
       responses:
         200:
           description: "Service is running"
@@ -34,6 +36,8 @@ paths:
           $ref: "#/components/responses/405"
   "/inventories/{inventoryId}/histories":
     get:
+      tags:
+        - Inventory
       parameters:
         - $ref: "#/components/parameters/inventoryId"
       responses:
@@ -63,6 +67,8 @@ paths:
           $ref: "#/components/responses/405"
   "/inventories/{inventoryId}":
     put:
+      tags:
+        - Inventory
       parameters:
         - $ref: "#/components/parameters/inventoryId"
       requestBody:
@@ -98,6 +104,8 @@ paths:
         405:
           $ref: "#/components/responses/405"
     get:
+      tags:
+        - Inventory
       parameters:
         - $ref: "#/components/parameters/inventoryId"
       responses:
@@ -126,6 +134,8 @@ paths:
           $ref: "#/components/responses/405"
   "/inventories/product/{productId}":
     get:
+      tags:
+        - Inventory
       parameters:
         - $ref: "#/components/parameters/productId"
       responses:
@@ -154,6 +164,8 @@ paths:
           $ref: "#/components/responses/405"
   "/products":
     post:
+      tags:
+        - Product
       requestBody:
         content:
           application/json:
@@ -188,6 +200,8 @@ paths:
         405:
           $ref: "#/components/responses/405"
     get:
+      tags:
+        - Product
       responses:
         200:
           description: "Data retrieved successfully"
@@ -214,6 +228,8 @@ paths:
           $ref: "#/components/responses/405"
   "/products/{productId}":
     put:
+      tags:
+        - Product
       parameters:
         - $ref: "#/components/parameters/productId"
       requestBody:
@@ -249,6 +265,8 @@ paths:
         405:
           $ref: "#/components/responses/405"
     delete:
+      tags:
+        - Product
       parameters:
         - $ref: "#/components/parameters/productId"
       responses:
@@ -274,6 +292,8 @@ paths:
         405:
           $ref: "#/components/responses/405"
     get:
+      tags:
+        - Product
       parameters:
         - $ref: "#/components/parameters/productId"
       responses:
@@ -303,6 +323,8 @@ paths:
           $ref: "#/components/responses/405"
   "/users":
     post:
+      tags:
+        - User Profile
       requestBody:
         content:
           application/json:
@@ -337,6 +359,8 @@ paths:
         405:
           $ref: "#/components/responses/405"
     get:
+      tags:
+        - User Profile
       responses:
         200:
           description:
@@ -364,6 +388,8 @@ paths:
           $ref: "#/components/responses/405"
   "/users/{userId}":
     get:
+      tags:
+        - User Profile
       parameters:
         - $ref: "#/components/parameters/userId"
       responses:
@@ -392,6 +418,8 @@ paths:
         405:
           $ref: "#/components/responses/405"
     put:
+      tags:
+        - User Profile
       parameters:
         - $ref: "#/components/parameters/userId"
       requestBody:
@@ -424,6 +452,8 @@ paths:
         405:
           $ref: "#/components/responses/405"
     delete:
+      tags:
+        - User Profile
       parameters:
         - $ref: "#/components/parameters/userId"
       responses:
@@ -448,6 +478,142 @@ paths:
           $ref: "#/components/responses/500"
         405:
           $ref: "#/components/responses/405"
+  "/login":
+    post:
+      tags:
+        - Authentication
+      requestBody:
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "#/components/schemas/login"
+              required:
+                - email
+                - password
+      responses:
+        200:
+          description: Login Successfully Done!
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                    example: 200
+                  message:
+                    type: string
+                    example: User Created!
+                  data:
+                    $ref: "#/components/schemas/data"
+        400:
+          $ref: "#/components/responses/400"
+        500:
+          $ref: "#/components/responses/500"
+        405:
+          $ref: "#/components/responses/405"
+  "/register":
+    post:
+      tags:
+        - Authentication
+      requestBody:
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "#/components/schemas/register"
+              required:
+                - name
+                - email
+                - password
+      responses:
+        201:
+          description: Register Successfully Done!
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                    example: 201
+                  message:
+                    type: string
+                    example: Register Successfully Done!
+                  data:
+                    $ref: "#/components/schemas/authUser"
+        400:
+          $ref: "#/components/responses/400"
+        500:
+          $ref: "#/components/responses/500"
+        405:
+          $ref: "#/components/responses/405"
+  "/checkpoint":
+    post:
+      tags:
+        - Authorization
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token:
+                  type: string
+                  example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbHlvczIyOWowMDAwd2tkNzUzZWdjdTYzIiwiZW1haWwiOiJtdW5pcmErYWRtaW5AZ21haWwuY29tIiwicm9sZSI6IkFETUlOIiwibmFtZSI6Ik11bmlyYSIsImlhdCI6MTcyMTE1NjU2NSwiZXhwIjoxNzIxMTYzNzY1fQ.aen7OElYRY72bzXBSmPZEKkicjzamlD3fvTc6zT16-c"
+              required:
+                - token
+      responses:
+        200:
+          description: Access Token Verification
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                    example: 200
+                  message:
+                    type: string
+                    example: Authorized
+                  data:
+                    $ref: "#/components/schemas/verifyToken"
+        400:
+          $ref: "#/components/responses/400"
+        401:
+          $ref: "#/components/responses/401"
+        500:
+          $ref: "#/components/responses/500"
+        405:
+          $ref: "#/components/responses/405"
+  "/verify-token":
+    post:
+      tags:
+        - Authorization
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                code:
+                  type: string
+                  example: 23456
+                email:
+                  type: string
+                  example: "muniraweb@gmail.com"
+                type:
+                  type: string
+                  example: "ACCOUNT_ACTIVATION"
+              required:
+                - code
+                - email
+                - type
 components:
   parameters:
     userId:
@@ -670,6 +836,80 @@ components:
         updatedAt:
           type: string
           format: string
+    register:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "Munira"
+        email:
+          type: string
+          example: "munira.learn@gmail.com"
+        password:
+          type: string
+          example: "200720200!@#"
+        role:
+          type: string
+          example: USER
+        isVerified:
+          type: string
+          example: true
+        status:
+          type: string
+          example: PENDING
+    authUser:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+          example: "Munira"
+        email:
+          type: string
+          example: "munira.learn@gmail.com"
+        password:
+          type: string
+          example: "200720200!@#"
+        role:
+          type: string
+          example: USER
+        isVerified:
+          type: string
+          example: true
+        status:
+          type: string
+          example: PENDING
+    login:
+      type: object
+      properties:
+        email:
+          type: string
+          example: "munira.learn@gmail.com"
+        password:
+          type: string
+          example: "200720200!@#"
+    data:
+      type: object
+      properties:
+        authToken:
+          type: string
+          example: "64f825a8e1e529afedd53695"
+    verifyToken:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "64f825a8e1e529afedd53695"
+        name:
+          type: string
+          example: "Munira"
+        email:
+          type: string
+          example: "munira.learn@gmail.com"
+        role:
+          type: string
+          example: USER
   responses:
     400:
       description: Bad request
@@ -727,3 +967,17 @@ components:
               message:
                 type: string
                 example: Internal Server Error
+    401:
+      description: UnAuthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+                example: 401
+              message:
+                type: string
+                example: UnAuthorized

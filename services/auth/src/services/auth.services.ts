@@ -143,6 +143,7 @@ export class authService {
       url: `${EMAIL_URL}/emails/send`,
       data: {
         recipient: authUser.email,
+        sender: "muniraweb@gmail.com",
         subject: "Verification Code to verify your account",
         body: `Your verification code is ${code}`,
         source: "user-registration",
@@ -198,7 +199,7 @@ export class authService {
         id: hasToken.id,
       },
       data: {
-        verifiedAt: Date.now().toString(),
+        verifiedAt: new Date(Date.now()),
         isUsed: true,
       },
     });
@@ -220,8 +221,10 @@ export class authService {
       url: `${EMAIL_URL}/emails/send`,
       data: {
         recipient: user?.email,
+        sender: "muniraweb@gmail.com",
         subject: "Account Activation Confirmation.",
         body: "Your account has been successfully activated on our portal",
+        source: "account-activation",
       },
     });
 

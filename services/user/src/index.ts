@@ -23,7 +23,7 @@ app.get("/health", methodNotAllowed("get"), (_req: Request, res: Response) => {
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
-app.use(originGuard);
+app.use(originGuard([process.env.AUTH_URL || "http://localhost:4003"]));
 
 app.use("/", router);
 

@@ -2,7 +2,7 @@
 CREATE TYPE "ROLE" AS ENUM ('USER', 'ADMIN');
 
 -- CreateEnum
-CREATE TYPE "STATUS" AS ENUM ('ACTIVE', 'INACTIVE', 'SUSPENDE', 'PENDING');
+CREATE TYPE "STATUS" AS ENUM ('ACTIVE', 'INACTIVE', 'SUSPEND', 'PENDING');
 
 -- CreateEnum
 CREATE TYPE "LoginAttempt" AS ENUM ('SUCCESS', 'FAILED');
@@ -49,6 +49,7 @@ CREATE TABLE "VerificationCode" (
     "issuedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "expiredAt" TIMESTAMP(3),
     "verifiedAt" TIMESTAMP(3),
+    "isUsed" BOOLEAN NOT NULL DEFAULT false,
 
     CONSTRAINT "VerificationCode_pkey" PRIMARY KEY ("id")
 );

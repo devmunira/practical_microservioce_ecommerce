@@ -26,7 +26,7 @@ export const SendEmail = async (
     };
 
     // send email throw transport
-    const { rejected } = await transporter.sendEmail(emailOptions);
+    const { rejected } = await transporter.sendMail(emailOptions);
     if (rejected.length) {
       console.log(`rejected ${rejected}`);
       return res.status(500).json({ error: "Failed" });

@@ -10,7 +10,7 @@ const getOrderById = async (
     const order = await prisma.order.findUnique({
       where: { id: req.params.id },
       include: {
-        orderItems: true,
+        ordersItems: true,
       },
     });
 
